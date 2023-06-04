@@ -5,17 +5,39 @@
 </form>
 
 --------------------------------------
-<h1>سبد خرید</h1>
-
-{% for product in cart.products %}
-    <p>{{ product.name }} - {{ product.price }}</p>
-    <form method="POST" action="{% url 'remove_from_cart' %}">
-        {% csrf_token %}
-        <input type="hidden" name="product_id" value="{{ product.id }}">
-        <button type="submit">حذف</button>
-    </form>
-{% empty %}
-    <p>سبد خرید شما خالی است.</p>
-{% endfor %}
 
 <a href="{% url 'add_to_cart' %}">افزودن محصول به سبد خرید</a>
+-------------------------------
+fetch('آدرس_API', {
+  method: 'POST',
+  body: new FormData(document.getElementById('فرم')),
+})
+  .then(response => response.json())
+  .then(data => {
+    // نمایش اطلاعات در قالب نوتیف
+    alert(data.message);
+  })
+  .catch(error => {
+    console.error('خطا:', error);
+  });
+------------------------------------
+ '''   def apply_discount(self):
+        current_date = timezone.now().date()
+        offers = self.offers.filter(start_date__lte=current_date, end_date__gte=current_date)
+
+        if offers.exists():
+            # Assuming a product can have multiple offers, choose the highest discount
+            max_discount = max(offers.values_list('discount', flat=True))
+            if max_discount > 0:
+                if max_discount <= 1:
+                    # Percentage discount
+                    discount_amount = self.price * Decimal(max_discount)
+                else:
+                    # Fixed amount discount
+                    discount_amount = Decimal(max_discount)
+
+                final_price = self.price - discount_amount
+                return final_price
+
+            return self.price
+    '''

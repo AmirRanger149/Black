@@ -70,7 +70,9 @@ class Index(Page):
         verbose_name = "خانه"
 
 
-class Comment(models.Model):
+@register_snippet
+class Comments(models.Model):
+    title = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     email = models.EmailField()
     body = models.TextField()
@@ -78,6 +80,30 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'بازخورد کاربر'
+        verbose_name_plural = 'باخورد کاربران'
+
+
+@register_snippet
+class categories(models.Model):
+    name = models.CharField(max_length=100)
+    collection = models.ForeignKey(
+        'wagtailcore.Collection',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='یک مجموعه برای دسته بندی انتخاب کنید',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'دسته بندی'
+        verbose_name_plural = 'دسته بندی ها'
  
 
 # FOOTER LINK BOX

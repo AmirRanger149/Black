@@ -1,0 +1,12 @@
+<h1>سبد خرید</h1>
+
+{% for product in cart.products %}
+    <p>{{ product.name }} - {{ product.price }}</p>
+    <form method="POST" action="{% url 'remove_from_cart' %}">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit">حذف</button>
+    </form>
+{% empty %}
+    <p>سبد خرید شما خالی است.</p>
+{% endfor %}

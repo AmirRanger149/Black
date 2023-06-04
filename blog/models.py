@@ -16,8 +16,8 @@ from wagtail.admin.panels import FieldPanel
 from taggit.models import TaggedItemBase
 from wagtail.fields import RichTextField
 from django.utils import timezone
+from index.models import Comments
 from wagtail.search import index
-from index.models import Comment
 from django.db import models
 
 
@@ -83,8 +83,8 @@ class BlogIndex(Page, RoutablePageMixin):
 
 # blog page model
 class BlogPage(Page):
-    comments = models.ManyToManyField(Comment, blank=True)
-    owner: models.ForeignKey(User, blank=True, on_delete=models.SET_NULL,) #on_delete=models.SET_NULL
+    comments = models.ManyToManyField(Comments, blank=True)
+    owner: models.ForeignKey(User, blank=True, on_delete=models.SET_NULL,)
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True, blank=True,
@@ -94,7 +94,7 @@ class BlogPage(Page):
         help_text='یک تصویر بارگزاری کنید',
         )
     collection = models.ForeignKey(
-        'wagtailcore.Collection',
+        'index.categories',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

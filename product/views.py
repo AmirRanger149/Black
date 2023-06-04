@@ -13,7 +13,7 @@ from carton.cart import Cart
 
 def cart_view(request):
     cart = Cart(request.session)
-    return render(request, 'utils/cart.html', {'cart': cart})
+    return render(request, 'products/cart.html', {'cart': cart})
 
 
 def add_to_cart(request):
