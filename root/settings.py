@@ -17,6 +17,9 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SET BASE DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
+# PRODUCT MODEL
+CART_PRODUCT_MODEL = 'product.models.InventoryItem'
+
 # site id (for multi site enable)
 SITE_ID = 1
 

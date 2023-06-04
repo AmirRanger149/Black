@@ -5,12 +5,12 @@ developer : #ABS
 """
 
 # Import all requirements
+from product.views import cart_view, add_to_cart, remove_from_cart
 from .local_settings import DEVELOPERS_PANEL, ADMINS_PANEL
 from wagtail.documents import urls as wagtaildocs_urls
 from django.conf.urls import handler404, handler500
 from wagtail.admin import urls as wagtailadmin_urls
 from django.views.generic.base import RedirectView
-from product.views import CartView, CheckoutView
 from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from wagtail import urls as wagtail_urls
@@ -22,13 +22,15 @@ import os.path
 
 # NOTE : PLEASE KEEP THIS FILE SAFE !
 urlpatterns = [
-    path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('cart/remove/', remove_from_cart, name='remove_from_cart'),
+    #path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('cart/add/', add_to_cart, name='add_to_cart'),
     path('api-auth/', include('rest_framework.urls')),
     path(ADMINS_PANEL, include(wagtailadmin_urls)),
     path('UNIQUEDOC/', include(wagtaildocs_urls)),
-    path('cart/', CartView.as_view(), name='cart'),
     path('accounts/', include('allauth.urls')),
     path(DEVELOPERS_PANEL, admin.site.urls),
+    path('cart/', cart_view, name='cart'),
     path('api/', api_router.urls),
 
     re_path(r'', include(wagtail_urls)),

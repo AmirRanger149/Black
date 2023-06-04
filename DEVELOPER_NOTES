@@ -3,3 +3,19 @@
   <input type="number" name="quantity" value="1" min="1">
   <button type="submit">افزودن به سبد خرید</button>
 </form>
+
+--------------------------------------
+<h1>سبد خرید</h1>
+
+{% for product in cart.products %}
+    <p>{{ product.name }} - {{ product.price }}</p>
+    <form method="POST" action="{% url 'remove_from_cart' %}">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit">حذف</button>
+    </form>
+{% empty %}
+    <p>سبد خرید شما خالی است.</p>
+{% endfor %}
+
+<a href="{% url 'add_to_cart' %}">افزودن محصول به سبد خرید</a>

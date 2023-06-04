@@ -1,15 +1,60 @@
-from django.db.models import Count
-from django.http import HttpRequest
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
-from django.views.generic.base import View
-from index.models import SiteBanner
-from index.extensions.http_service import get_client_ip
-from index.extensions.group_list_convertor import group_list
-from index.models import Image
 from .models import InventoryItem, ProductBrand, ProductVisit, CartItem
+from index.extensions.group_list_convertor import group_list
+from index.extensions.http_service import get_client_ip
+from django.views.generic import ListView, DetailView
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import render, redirect
+from django.views.generic.base import View
+from django.db.models import Count
+from index.models import SiteBanner
+from index.models import Image
+from carton.cart import Cart
 
 
+def cart_view(request):
+    cart = Cart(request.session)
+    return render(request, 'utils/cart.html', {'cart': cart})
+
+
+def add_to_cart(request):
+    cart = Cart(request.session)
+    product_id = request.POST.get('InventoryItem_id')
+    try:
+        product = InventoryItem.objects.get(pk=product_id)
+        if product.is_available:
+            quantity_requested = int(request.POST.get('quantity', 1))
+            if quantity_requested <= product.quantity:
+                cart.add(product, price=product.price)
+                message = f"محصول {product.product_title} با موفقیت به سبد خرید اضافه شد."
+                response_data = {'success': True, 'message': message}
+            else:
+                message = "تعداد سفارش درخواستی بیشتر از موجودی محصول است."
+                response_data = {'success': False, 'message': message}
+        else:
+            message = "موجودی محصول به پایان رسیده است."
+            response_data = {'success': False, 'message': message}
+    except InventoryItem.DoesNotExist:
+        message = "محصول مورد نظر پیدا نشد."
+        response_data = {'success': False, 'message': message}
+    return JsonResponse(response_data)
+
+
+def remove_from_cart(request):
+    cart = Cart(request.session)
+    product_id = request.POST.get('InventoryItem_id')
+    try:
+        product = InventoryItem.objects.get(pk=product_id)
+        cart.remove_single(product)
+        message = f"محصول {product.product_title} با موفقیت از سبد خرید حذف شد."
+        response_data = {'success': True, 'message': message}
+    except InventoryItem.DoesNotExist:
+        message = "محصول مورد نظر پیدا نشد."
+        response_data = {'success': False, 'message': message}
+    
+    return JsonResponse(response_data)
+
+
+'''
 def update_cart_item(request, cart_item_id):
     if request.method == 'POST':
         quantity = request.POST.get('quantity')
@@ -50,11 +95,7 @@ class CheckoutView(View):
         # پاک کردن سبد خرید
         request.session["cart"] = []
         return redirect("checkout_success")
-
-
-
-
-
+'''
 '''
 class ProductListView(ListView):
     template_name = 'product_module/product_list.html'

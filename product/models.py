@@ -83,6 +83,10 @@ class ProductIndex(RoutablePageMixin, Page):
         FieldPanel('intro')
     ]
 
+    def get_template(self, request, *args, **kwargs):
+
+        return 'products/product_index.html'
+
     class Meta:
         verbose_name = 'صفحه محصولات'
 
@@ -148,7 +152,7 @@ class InventoryItem(RoutablePageMixin, Page):
         FieldPanel('collection'),
     ]
 
-    def apply_discount(self):
+ '''   def apply_discount(self):
         current_date = timezone.now().date()
         offers = self.offers.filter(start_date__lte=current_date, end_date__gte=current_date)
 
@@ -167,7 +171,7 @@ class InventoryItem(RoutablePageMixin, Page):
                 return final_price
 
             return self.price
-    
+    '''
     @property
     def total_visits(self):
         return self.productvisit_set.aggregate(total=models.Sum('visit'))['total'] or 0
@@ -264,9 +268,13 @@ class InventoryItem(RoutablePageMixin, Page):
 
     jpub.short_description = 'زمان انتشار'
 
+    def get_template(self, request, *args, **kwargs):
+
+        return 'products/product_page.html'
+
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        loaded_product = Product.objects.live().order_by('-first_published_at')
+        loaded_product = InventoryItem.objects.live().order_by('-first_published_at')
         context['products'] = loaded_product if loaded_product is not None else 0
         return context
 

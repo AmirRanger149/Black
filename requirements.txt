@@ -8,6 +8,7 @@ cryptography==40.0.2
 defusedxml==0.7.1
 Django==4.2.1
 django-allauth==0.54.0
+django-carton==1.2.1
 django-filter==22.1
 django-jalali-date==1.0.2
 django-modelcluster==6.0
