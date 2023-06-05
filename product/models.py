@@ -8,8 +8,10 @@ from django.shortcuts import render, redirect
 from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
+from rest_framework.fields import Field
 from django.utils import timezone
 from django.db.models import Sum
+from wagtail.api import APIField
 from django.db import models
 import pandas as pd
 
@@ -17,6 +19,34 @@ import pandas as pd
 class ProductPageManager(PageManager):
     '''Inventory & Products Manager'''
     pass
+
+
+# Product Index Child Serializer
+class ProductChildPageSerializer(Field):
+    ''' Serialize model => API | JSON '''
+    def to_representation(self, value):
+        return [
+            {
+                'id' : child.id,
+                'slug' : child.slug,
+                'title' : child.title,
+                'product_title' : child.product_title,
+                'comments' : child.comments,
+                'author' : child.author,
+                'image' : child.image,
+                'quantity' : child.quantity,
+                'date' : child.date,
+                'brand' : child.brand,
+                'price' : child.price,
+                'short_description' : child.short_description,
+                'description' : child.description,
+                'colors' : child.colors,
+                'is_active' : child.is_active,
+                'is_available' : child.is_available,
+                'total_visits' : child.total_visits,
+
+            }for child in value
+        ]
 
 
 @register_snippet
@@ -74,11 +104,17 @@ class ProductColor(models.Model):
 
 class ProductIndex(RoutablePageMixin, Page):
     ''' PRODUCT INDEX PAGE '''
+
     intro = RichTextField(blank=True, verbose_name='نام صفحه محصولات سایت')
+
     objects = ProductPageManager()
+
     max_count = 1
+
     subpage_types = ['product.InventoryItem']
+
     parent_page_types = ['index.Index']
+
     content_panels = Page.content_panels + [
         FieldPanel('intro')
     ]
@@ -97,7 +133,7 @@ class ProductIndex(RoutablePageMixin, Page):
         return render(
             request,
             self.get_template(request, *args, **kwargs),
-            self.context(request, *args, **kwargs),
+            self.get_context(request, *args, **kwargs),
         )
 
     class Meta:
@@ -159,14 +195,17 @@ class InventoryItem(RoutablePageMixin, Page):
     date = models.DateTimeField("Post date", default=timezone.now)
     brand = models.OneToOneField(ProductBrand, on_delete=models.PROTECT, verbose_name='برند', null=True, blank=True)
     price = models.PositiveIntegerField(verbose_name='قیمت', blank=False, null=False)
-    short_description = models.CharField(max_length=360, db_index=True, null=True, blank=True, verbose_name='توضیحات کوتاه')
+    short_description = models.CharField(max_length=30, db_index=True, null=True, blank=True, verbose_name='توضیحات کوتاه')
     description = models.TextField(verbose_name='توضیحات اصلی', db_index=True, null=True, blank=True)
     colors = models.OneToOneField(ProductColor, null=True, blank=True, verbose_name='رنگ بندی محصول:', on_delete=models.PROTECT)
     is_active = models.BooleanField(default=False, verbose_name='فعال / غیرفعال', blank=False, null=False)
     is_available = models.BooleanField(default=True, verbose_name='موجودی / عدم موجودی', blank=False, null=False)
     total_visits = models.IntegerField(verbose_name='تعداد کل بازدید', default=0)
+    
     subpage_types = []
+
     parent_page_types = ['product.ProductIndex']
+
     content_panels = Page.content_panels + [
         FieldPanel('product_title'),
         FieldPanel('brand'),
@@ -180,6 +219,13 @@ class InventoryItem(RoutablePageMixin, Page):
         FieldPanel('collection'),
     ]
 
+    api_fields = [
+        APIField("get_child_pages", serializer=ProductChildPageSerializer()),
+    ]
+
+    @property
+    def get_child_pages(self):
+        return self.get_children().public().live()
 
     @property
     def total_visits(self):
