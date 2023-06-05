@@ -12,9 +12,11 @@ from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
 from rest_framework.fields import Field
+from django.shortcuts import render
 from taggit.forms import TagField
 from wagtail.api import APIField
 from wagtail.search import index
+from blog.models import BlogPage
 from django.db import models
 
 # INDEX PAGE MANAGER
@@ -59,12 +61,19 @@ class Index(Page):
     def get_child_pages(self):
         return self.get_children().public().live()
 
+    def get_template(self, request, *args, **kwargs):
+
+        return 'index/index.html'
+
     def get_context(self, request, *args, **kwargs):
-        """Send context(Like blog posts) for template"""
-        #context = super().get_context(request, *args, **kwargs)
-        # Get all posts
-        #all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
-        pass
+        context = super().get_context(request, *args, **kwargs)
+
+    def serve(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.get_template(request, *args, **kwargs),
+            self.get_context(request, *args, **kwargs),
+        )
 
     class Meta:
         verbose_name = "خانه"
@@ -83,7 +92,7 @@ class Comments(models.Model):
 
     class Meta:
         verbose_name = 'بازخورد کاربر'
-        verbose_name_plural = 'باخورد کاربران'
+        verbose_name_plural = 'بازخورد کاربران'
 
 
 @register_snippet
@@ -106,23 +115,10 @@ class categories(models.Model):
         verbose_name_plural = 'دسته بندی ها'
  
 
-# FOOTER LINK BOX
-class FooterLinkBox(models.Model):
-    title = models.CharField(max_length=200, verbose_name='عنوان')
-
-    class Meta:
-        verbose_name = 'دسته بندی لینک های فوتر'
-        verbose_name_plural = 'دسته بندی های لینک های فوتر'
-
-    def __str__(self):
-        return self.title
-
-
 # FOOTER LINK
 class FooterLink(models.Model):
     title = models.CharField(max_length=200, verbose_name='عنوان')
     url = models.URLField(max_length=500, verbose_name='لینک')
-    footer_link_box = models.ForeignKey(to=FooterLinkBox, on_delete=models.CASCADE, verbose_name='دسته بندی')
 
     class Meta:
         verbose_name = 'لینک فوتر'
@@ -147,23 +143,3 @@ class Slider(models.Model):
 
     def __str__(self):
         return self.title
-
-
-# SITE BANNER
-class SiteBanner(models.Model):
-    class SiteBannerPositions(models.TextChoices):
-        product_list = 'product_list', 'صفحه لیست محصولات',
-        product_detail = 'product_detail', 'صفحه ی جزییات محصولات',
-        about_us = 'about_us', 'درباره ما'
-
-    title = models.CharField(max_length=200, verbose_name='عنوان بنر')
-    url = models.URLField(max_length=400, null=True, blank=True, verbose_name='آدرس بنر')
-    image = models.ImageField(upload_to='images/banners', verbose_name='تصویر بنر')
-    is_active = models.BooleanField(verbose_name='فعال / غیرفعال')
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = 'بنر تبلیغاتی'
-        verbose_name_plural = 'بنرهای تبلیغاتی'

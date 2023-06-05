@@ -16,7 +16,6 @@ from wagtail.admin.panels import FieldPanel
 from taggit.models import TaggedItemBase
 from wagtail.fields import RichTextField
 from django.utils import timezone
-from index.models import Comments
 from wagtail.search import index
 from django.db import models
 
@@ -47,10 +46,12 @@ class BlogIndex(Page, RoutablePageMixin):
     def get_child_pages(self):
         return self.get_children().public().live()
 
+    def get_template(self, request, *args, **kwargs):
+
+        return 'blog/blogarchive/blogarchive.html'
+
     def get_context(self, request, *args, **kwargs):
-        """Send context(Like blog posts) for template"""
         context = super().get_context(request, *args, **kwargs)
-        # Get all posts
         all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
 
         if request.GET.get('tag', None):
@@ -77,13 +78,20 @@ class BlogIndex(Page, RoutablePageMixin):
         context["posts"] = posts
         return context
 
+    def serve(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.get_template(request, *args, **kwargs),
+            self.context(request, *args, **kwargs),
+        )
+
     class Meta:
         verbose_name = 'صفحه اصلی وبلاگ'
 
 
 # blog page model
 class BlogPage(Page):
-    comments = models.ManyToManyField(Comments, blank=True)
+    comments = models.ManyToManyField('index.Comments', blank=True)
     owner: models.ForeignKey(User, blank=True, on_delete=models.SET_NULL,)
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -129,5 +137,15 @@ class BlogPage(Page):
 
     def jpub(self):
         return jConvert(self.date)
+
+    def get_template(self, request, *args, **kwargs):
+
+        return 'blog/blogsingle/blogsingle.html'
+
+    def serve(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.get_template(request, *args, **kwargs),
+        )
     
     jpub.short_description = 'زمان انتشار'

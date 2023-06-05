@@ -286,13 +286,13 @@ LOGIN_URL = LOCAL_LOGIN_URL
 LOGIN_REDIRECT_URL = '/'
 
 # ACCOUNT AUTHENTICATION METHOD
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_AUTHENTICATION_METHOD = 'phoneNumber_username_email'
 
 # ACCOUNT_CONFIRM_EMAIL_ON_GET
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 
 # ACCOUNT_EMAIL_REQUIRED
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 
 # ACCOUNT_USERNAME_REQUIRED
 ACCOUNT_USERNAME_REQUIRED = False
@@ -341,8 +341,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # FORMS FOR AUTHENTICATION
+''' PLEASE KEEP THIS FILE SAFE !  '''
 ACCOUNT_FORMS = {
-    ''' PLEASE KEEP THIS FILE SAFE !  '''
     'add_email': 'allauth.account.forms.AddEmailForm',
     'change_password': 'user_accounts.forms.CustomPasswordChangeForm',
     'disconnect': 'allauth.socialaccount.forms.DisconnectForm',

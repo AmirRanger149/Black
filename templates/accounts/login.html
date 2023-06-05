@@ -1,28 +1,45 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block HEADING %}
+<link rel="stylesheet" href="{% static 'css/accounts/stylelogin.css' %}" />
+{% endblock %}
 {% block CONTENT %}
 {% if user.is_authenticated %}
 <h3 style="color: red;"> Error : you are now Login ! </h3>
 <button onclick="window.history.back();">Go Back</button>
 <a href="{% url 'logout' %}"><button>logout</button></a>
 {% else %}
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-6 mx-auto">
-        <h2 class="text-center mb-4">Login</h2>
-        <form method="POST">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">Username:</label>
-            {{ form.username }}
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col asidelogform">
+          <div class="container">
+            <section class="main">
+              <form class="form-3" method="POST">
+                {% csrf_token %}
+                {{ login_form }}
+                <input type="checkbox" name="remember" id="remember" />
+                <label for="remember">مرا به خاطر بسپار</label>
+                <input type="submit" name="submit" value="Login" />
+              </form>
+            </section>
           </div>
-          <div class="form-group">
-            <label for="{{ form.password.id_for_label }}">Password:</label>
-            {{ form.password }}
+          <div class="container">
+            <section class="main">
+              <form class="form-3" method="POST">
+                {% csrf_token %}
+                {{ signup_form }}
+                <input type="checkbox" name="remember" id="remember" />
+                <label for="remember">مرا به خاطر بسپار</label>
+                <input type="submit" name="submit" value="Sign Up" />
+              </form>
+            </section>
           </div>
-          <button type="submit" class="btn btn-primary btn-block mt-4">Login</button>
-        </form>
+        </div>
+        <div class="col asidelogimg">
+          <div></div>
+        </div>
       </div>
     </div>
-  </div>
-  {% endif %}
-{% endblock %}
+    {% endif %}
+  {% endblock %}

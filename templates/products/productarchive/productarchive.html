@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.rtl.min.css"
+      integrity="sha384-T5m5WERuXcjgzF8DAb7tRkByEZQGcpraRTinjpywg37AO96WoYN9+hrhDVoM6CaT"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>آرشیو محصولات</title>
+  </head>
+  <body>
+    <header class="headerblog">
+      <div class="h1divhead">
+        <h1 class="blogh1 white-color">آرشیو محصولات</h1>
+      </div>
+    </header>
+    <main class="container-fluid">
+      <div class="row">
+        <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="position-sticky" style="top: 1rem">
+            <div class="p-4 mb-3 asidefilter">
+              <h4 class="h3 bchs">انتخاب دسته بندی</h4>
+              <ul class="navliststyle asidecat">
+                <li class="bbs1px">
+                  <a href="" class="black-color ahover">دسته بندی یک</a>
+                  <span>6</span>
+                </li>
+                <li class="bbs1px">
+                  <a href="" class="black-color ahover">دسته بندی دو</a>
+                  <span>9</span>
+                </li>
+                <li class="bbs1px">
+                  <a href="" class="black-color ahover">دسته بندی سه</a>
+                  <span>7</span>
+                </li>
+                <li class="bbs1px">
+                  <a href="" class="black-color ahover">دسته بندی چهار</a>
+                  <span>4</span>
+                </li>
+                <li class="bbs1px">
+                  <a href="" class="black-color ahover">دسته بندی پنج</a>
+                  <span>8</span>
+                </li>
+              </ul>
+            </div>
+            <div class="p-4 mb-3 asidefilter">
+              <h4 class="h3 bchs">فیلتر محصول</h4>
+              <label for="inventory">محصولات موجود </label>
+              <input type="checkbox" id="inventory" /><br />
+              <label for="specialdiscount">محصولات تخفیف دار</label>
+              <input type="checkbox" id="specialdiscount" />
+            </div>
+            <div class="p-4 mb-3 asidefilter">
+              <h4 class="h3 bchs">فیلتر قیمت</h4>
+              <input
+                type="number"
+                id="min-price"
+                placeholder="حداقل قیمت از.....تومان"
+              />
+              <input
+                type="number"
+                id="max-price"
+                placeholder="حداکثر قیمت تا.....تومان"
+              />
+              <button
+                class="btn btn-outline-danger"
+                onclick="filterProducts() "
+              >
+                اعمال فیلتر
+              </button>
+            </div>
+          </div>
+        </div>
+        <section class="col-xxl-9 col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+          <div class="sortpro">
+            <span class="p-4 mb-3 asidefilterrec">
+              <button
+                class="btn bi bi-filter"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasExample"
+                aria-controls="offcanvasExample"
+              >
+                مشاهده فیلتر ها
+              </button>
+
+              <div
+                class="offcanvas offcanvas-start"
+                tabindex="-1"
+                id="offcanvasExample"
+                aria-labelledby="offcanvasExampleLabel"
+              >
+                <div class="offcanvas-header">
+                  <span class="bi bi-filter">مشاهده فیلترها</span>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="offcanvas-body">
+                  <div class="p-4 mb-3">
+                    <h4 class="h3 bchs">انتخاب دسته بندی</h4>
+                    <ul class="navliststyle asidecat">
+                      <li class="bbs1px">
+                        <a href="" class="black-color ahover">دسته بندی یک</a>
+                        <span>6</span>
+                      </li>
+                      <li class="bbs1px">
+                        <a href="" class="black-color ahover">دسته بندی دو</a>
+                        <span>9</span>
+                      </li>
+                      <li class="bbs1px">
+                        <a href="" class="black-color ahover">دسته بندی سه</a>
+                        <span>7</span>
+                      </li>
+                      <li class="bbs1px">
+                        <a href="" class="black-color ahover">دسته بندی چهار</a>
+                        <span>4</span>
+                      </li>
+                      <li class="bbs1px">
+                        <a href="" class="black-color ahover">دسته بندی پنج</a>
+                        <span>8</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="p-4 mb-3">
+                    <h4 class="h3 bchs">فیلتر محصول</h4>
+                    <label for="inventory">محصولات موجود </label>
+                    <input type="checkbox" id="inventory" /><br />
+                    <label for="specialdiscount">محصولات تخفیف دار</label>
+                    <input type="checkbox" id="specialdiscount" />
+                  </div>
+                  <div class="p-4 mb-3">
+                    <h4 class="h3 bchs">فیلتر قیمت</h4>
+                    <input
+                      type="number"
+                      id="min-price"
+                      placeholder="حداقل قیمت از.....تومان"
+                    />
+                    <input
+                      type="number"
+                      id="max-price"
+                      placeholder="حداکثر قیمت تا.....تومان"
+                    />
+                    <button
+                      class="btn btn-outline-danger"
+                      onclick="filterProducts() "
+                    >
+                      اعمال فیلتر
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </span>
+            <span class="bi bi-sort-down"> مرتب سازی: </span>
+            <span class="icon2">پیشفرض</span>
+            <span class="icon2">پرفروش‌ترین‌</span>
+            <span class="icon2">ارزان‌ترین</span>
+            <span class="icon2">گران‌ترین</span>
+            <span class="icon2">جدیدترین</span>
+          </div>
+
+          <div class="row">
+            <div class="cardpro" style="width: 18rem">
+              <img src="/img/اسلایدمحصول1.jpg" class="card-img-top" alt="..." />
+              <div class="card-body">
+                <h3 class="card-title h4">
+                  <a href="" class="black-color">مقاله شماره یک</a>
+                </h3>
+                <span class="text-decoration-line-through icon2">300.000</span>
+                <span class="red-color">200.000 <span>تومان</span></span>
+                <hr />
+                <div class="tolspro">
+                  <span class="bi bi-heart"></span>
+                  <button type="submit" class="btn btn-danger addtocard">
+                    افزودن به سبد خرید
+                  </button>
+                  <span class="bi bi-arrow-left-right"></span>
+                </div>
+              </div>
+            </div>
+            <div class="cardpro" style="width: 18rem">
+              <img src="/img/اسلایدمحصول1.jpg" class="card-img-top" alt="..." />
+              <div class="card-body">
+                <h3 class="card-title h4">
+                  <a href="" class="black-color">مقاله شماره یک</a>
+                </h3>
+                <span class="text-decoration-line-through icon2">300.000</span>
+                <span class="red-color">200.000 <span>تومان</span></span>
+                <hr />
+                <div class="tolspro">
+                  <span class="bi bi-heart"></span>
+                  <button type="submit" class="btn btn-danger addtocard">
+                    افزودن به سبد خرید
+                  </button>
+                  <span class="bi bi-arrow-left-right"></span>
+                </div>
+              </div>
+            </div>
+            <div class="cardpro" style="width: 18rem">
+              <img src="/img/اسلایدمحصول1.jpg" class="card-img-top" alt="..." />
+              <div class="card-body">
+                <h3 class="card-title h4">
+                  <a href="" class="black-color">مقاله شماره یک</a>
+                </h3>
+                <span class="text-decoration-line-through icon2">300.000</span>
+                <span class="red-color">200.000 <span>تومان</span></span>
+                <hr />
+                <div class="tolspro">
+                  <span class="bi bi-heart"></span>
+                  <button type="submit" class="btn btn-danger addtocard">
+                    افزودن به سبد خرید
+                  </button>
+                  <span class="bi bi-arrow-left-right"></span>
+                </div>
+              </div>
+            </div>
+            <div class="cardpro" style="width: 18rem">
+              <img src="/img/اسلایدمحصول1.jpg" class="card-img-top" alt="..." />
+              <div class="card-body">
+                <h3 class="card-title h4">
+                  <a href="" class="black-color">مقاله شماره یک</a>
+                </h3>
+                <span class="text-decoration-line-through icon2">300.000</span>
+                <span class="red-color">200.000 <span>تومان</span></span>
+                <hr />
+                <div class="tolspro">
+                  <span class="bi bi-heart"></span>
+                  <button type="submit" class="btn btn-danger addtocard">
+                    افزودن به سبد خرید
+                  </button>
+                  <span class="bi bi-arrow-left-right"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+      integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+      integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

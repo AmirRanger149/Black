@@ -10,7 +10,6 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
 from django.utils import timezone
 from django.db.models import Sum
-from index.models import Comments
 from django.db import models
 import pandas as pd
 
@@ -86,7 +85,20 @@ class ProductIndex(RoutablePageMixin, Page):
 
     def get_template(self, request, *args, **kwargs):
 
-        return 'products/product_index.html'
+        return 'products/productarchive/productarchive.html'
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        loaded_product = InventoryItem.objects.live().public().order_by('-first_published_at')
+        context['products'] = loaded_product if loaded_product is not None else 0
+        return context
+
+    def serve(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.get_template(request, *args, **kwargs),
+            self.context(request, *args, **kwargs),
+        )
 
     class Meta:
         verbose_name = 'صفحه محصولات'
@@ -117,7 +129,7 @@ class InventoryItem(RoutablePageMixin, Page):
     ''' Inventory => &&& <= Products '''
     product_title = models.CharField(max_length=300, verbose_name='نام و مدل محصول', null=True, blank=True)
     author = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-    comments = models.ManyToManyField(Comments, blank=True)
+    comments = models.ManyToManyField('index.Comments', blank=True)
     collection = models.ForeignKey(
         'index.categories',
         null=True,
@@ -258,19 +270,12 @@ class InventoryItem(RoutablePageMixin, Page):
 
     def get_template(self, request, *args, **kwargs):
 
-        return 'products/product_page.html'
-
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        loaded_product = InventoryItem.objects.live().order_by('-first_published_at')
-        context['products'] = loaded_product if loaded_product is not None else 0
-        return context
+        return 'products/productsingle/productsingle.html'
 
     def serve(self, request, *args, **kwargs):
         return render(
             request,
             self.get_template(request, *args, **kwargs),
-            self.get_context(request, *args, **kwargs)
         )
 
     def save(self, *args, **kwargs):

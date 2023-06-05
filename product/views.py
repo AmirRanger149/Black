@@ -6,14 +6,12 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
 from django.db.models import Count
-from index.models import SiteBanner
-from index.models import Image
 from carton.cart import Cart
 
 
 def cart_view(request):
     cart = Cart(request.session)
-    return render(request, 'products/cart.html', {'cart': cart})
+    return render(request, 'products/cart/cart.html', {'cart': cart})
 
 
 def add_to_cart(request):

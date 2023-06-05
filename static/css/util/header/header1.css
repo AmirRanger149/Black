@@ -17,15 +17,3 @@
   margin-left: 10px;
   color: var(--graytext);
 }
-@media only screen and (max-width: 483px) {
-  i[class="bi bi-calendar3"] {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 767px) and (min-width: 100px) {
-  .call,
-  .soshalmedia {
-    text-align: center;
-  }
-}

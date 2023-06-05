@@ -5,6 +5,8 @@
   --white: #ffffff;
   --line1: #808080;
   --icon: #808080;
+  --icon2: #868686;
+  --grayc: #ececec;
 }
 .red-color {
   color: var(--red);
@@ -38,4 +40,10 @@
 }
 .icon-color {
   color: var(--graytext);
+}
+.bred-color {
+  color: #ff0000;
+}
+.icon2 {
+  color: var(--icon2);
 }

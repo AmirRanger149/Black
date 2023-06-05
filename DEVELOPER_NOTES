@@ -1,3 +1,6 @@
+username = 09129585714
+pass = QUEADMINISTRATOR174%!AbfsbflbdbPSJAFISHF@UNIQUEDOMIN.com
+
 <form method="POST" action="{% url 'add_to_cart' item.id %}">
   {% csrf_token %}
   <input type="number" name="quantity" value="1" min="1">

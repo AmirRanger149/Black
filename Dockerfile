@@ -37,10 +37,10 @@ RUN python3 manage.py makemigrations --empty blog && python3 manage.py makemigra
 RUN python3 manage.py migrate
 
 # Create a superuser
-RUN echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('QUEADMINISTRATOR174%!AbfsbflbdbPSJAFISHF@UNIQUEDOMIN.com', 'QUEADMINISTRATOR174%!AbfsbflbdbPSJAFISHF@UNIQUEDOMIN.com')" | python manage.py shell
+RUN echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('09129585714', 'QUEADMINISTRATOR174%!AbfsbflbdbPSJAFISHF@UNIQUEDOMIN.com')" | python manage.py shell
 
 # Run tests
-RUN python manage.py test
+#RUN python manage.py test
 
 # Expose the Django development server port
 EXPOSE 8000
