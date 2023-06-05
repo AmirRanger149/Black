@@ -2,7 +2,7 @@
 2020 Black
 developer : #ABS
 """
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 # 404 Error view (Page not found)

@@ -12,7 +12,7 @@ from .models import BlogPage
 
 # class BlogPageAdmin
 class BlogPageAdmin(admin.ModelAdmin):
-    list_display = ('jpub', 'intro', 'body',)
+    list_display = ('intro', 'body',)
 
 
 # register admin

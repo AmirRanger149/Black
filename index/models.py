@@ -8,11 +8,11 @@ from wagtail.images.models import Image, AbstractImage, AbstractRendition
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from wagtail.snippets.models import register_snippet
+from django.shortcuts import render, redirect
 from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
 from rest_framework.fields import Field
-from django.shortcuts import render
 from taggit.forms import TagField
 from wagtail.api import APIField
 from wagtail.search import index

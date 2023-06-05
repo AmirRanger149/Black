@@ -4,14 +4,15 @@ developer : #ABS
 """
 
 # Import all requirements
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from wagtail.contrib.routable_page.models import RoutablePageMixin
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from user_accounts.models import user_accounts as User
 from wagtail.snippets.models import register_snippet
 from django.http import HttpRequest, JsonResponse
 from wagtail.api.v2.views import PagesAPIViewSet
+from django.shortcuts import render, redirect
 from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
 from taggit.models import TaggedItemBase
@@ -99,8 +100,6 @@ class BlogPage(Page, RoutablePageMixin):
         FieldPanel('description'),
         FieldPanel('collection'),
     ]
-
-    jpub.short_description = 'زمان انتشار'
 
     def to_json(self):
         return {

@@ -13,7 +13,9 @@ def product(context):
         'request': context['request'],
     }
 
+# Jalali calculator
 @register.filter
-    # Jalali calculator
-    def jpub(jtime):
-        return jConvert(jtime.date)
+def jpub(jtime):
+    return jConvert(jtime.date)
+
+jpub.short_description = 'زمان انتشار'

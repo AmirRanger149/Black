@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
 
     # Wagtail full
+    "wagtail.contrib.routable_page",
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
     'wagtail.contrib.forms',

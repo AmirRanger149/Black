@@ -1,10 +1,10 @@
-from index.extensions.jalali_converter import jalali_converter as jConvert
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail_color_panel.edit_handlers import NativeColorPanel
 from user_accounts.models import user_accounts as User
 from wagtail.snippets.models import register_snippet
 from wagtail_color_panel.fields import ColorField
 from django.db.models import PROTECT, SET_NULL
+from django.shortcuts import render, redirect
 from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
@@ -294,11 +294,6 @@ class InventoryItem(RoutablePageMixin, Page):
             return balance_distribution
         except InventoryItem.DoesNotExist:
             return {}
-
-    def jpub(self):
-        return jConvert(self.date)
-
-    jpub.short_description = 'زمان انتشار'
 
     def get_template(self, request, *args, **kwargs):
 
