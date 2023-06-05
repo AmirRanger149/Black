@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{%block TITLE%}ورود به حساب کاربری{% endblock %}
+{%block TITLE%}ثبت نام کاربران{% endblock %}
 {% block HEADING %}
 <link rel="stylesheet" href="{% static 'css/accounts/stylelogin.css' %}" />
 {% endblock %}
@@ -17,27 +17,12 @@
             <section class="main">
               <form class="form-3" method="POST">
                 {% csrf_token %}
-                {{ login_form.as_p }}
-                <input type="checkbox" name="remember" id="remember" />
-                <label for="remember">مرا به خاطر بسپار</label>
-                <input
-                  type="submit"
-                  name="submit"
-                  value="ورود به حساب کاربری"
-                />
-              </form>
-            </section>
-          </div>
-          <div class="container">
-            <section class="main">
-              <form class="form-3" method="POST">
-                {% csrf_token %}
                 <label for="{{ signup_form.phoneNumber.id_for_label }}">شماره تماس</label>
-                {{ signup_form.phoneNumber }}
+                {{ form.phoneNumber }}
                 <label for="signup_form.password1.id_for_label">رمزعبور</label>
-                {{ signup_form.password1 }}
+                {{ form.password1 }}
                 <label for="signup_form.password2.id_for_label">تکرار رمزعبور</label>
-                {{ signup_form.password2 }}
+                {{ form.password2 }}
                 <input type="checkbox" name="remember" id="remember" />
                 <label for="remember">مرا به خاطر بسپار</label>
                 <input type="submit" name="submit" value="ساخت حساب کاربری" />
@@ -45,10 +30,8 @@
             </section>
           </div>
         </div>
-        <div class="col asidelogimg">
-          <div></div>
-        </div>
       </div>
     </div>
-{% endif %}
+    {% endif %}
 {% endblock %}
+

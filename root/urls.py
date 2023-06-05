@@ -26,7 +26,7 @@ urlpatterns = [
     #path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('cart/add/', add_to_cart, name='add_to_cart'),
     path('api-auth/', include('rest_framework.urls')),
-    path('account/', include('user_accounts.urls')),
+    path('accounts/', include('user_accounts.urls')),
     path('UsersAccounts/', include('allauth.urls')),
     path(ADMINS_PANEL, include(wagtailadmin_urls)),
     path('UNIQUEDOC/', include(wagtaildocs_urls)),

@@ -1,5 +1,6 @@
 from .models import InventoryItem, ProductBrand, ProductVisit, CartItem
 from index.extensions.group_list_convertor import group_list
+from django.contrib.auth.decorators import login_required
 from index.extensions.http_service import get_client_ip
 from django.views.generic import ListView, DetailView
 from django.http import HttpRequest, JsonResponse
@@ -9,11 +10,13 @@ from django.db.models import Count
 from carton.cart import Cart
 
 
+@login_required
 def cart_view(request):
     cart = Cart(request.session)
     return render(request, 'products/cart/cart.html', {'cart': cart})
 
 
+@login_required
 def add_to_cart(request):
     cart = Cart(request.session)
     product_id = request.POST.get('InventoryItem_id')
@@ -37,6 +40,7 @@ def add_to_cart(request):
     return JsonResponse(response_data)
 
 
+@login_required
 def remove_from_cart(request):
     cart = Cart(request.session)
     product_id = request.POST.get('InventoryItem_id')

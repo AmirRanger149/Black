@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{%block TITLE%}ورود به حساب کاربری{% endblock %}
 {% block HEADING %}
 <link rel="stylesheet" href="{% static 'css/accounts/stylelogin.css' %}" />
 {% endblock %}
@@ -9,7 +10,6 @@
 <button onclick="window.history.back();">Go Back</button>
 <a href="{% url 'logout' %}"><button>logout</button></a>
 {% else %}
-  <body>
     <div class="container-fluid">
       <div class="row">
         <div class="col asidelogform">
@@ -17,29 +17,20 @@
             <section class="main">
               <form class="form-3" method="POST">
                 {% csrf_token %}
-                {{ login_form }}
+                {{ form.as_p }}
                 <input type="checkbox" name="remember" id="remember" />
                 <label for="remember">مرا به خاطر بسپار</label>
-                <input type="submit" name="submit" value="Login" />
+                <input
+                  type="submit"
+                  name="submit"
+                  value="ورود به حساب کاربری"
+                />
               </form>
             </section>
           </div>
-          <div class="container">
-            <section class="main">
-              <form class="form-3" method="POST">
-                {% csrf_token %}
-                {{ signup_form }}
-                <input type="checkbox" name="remember" id="remember" />
-                <label for="remember">مرا به خاطر بسپار</label>
-                <input type="submit" name="submit" value="Sign Up" />
-              </form>
-            </section>
-          </div>
-        </div>
-        <div class="col asidelogimg">
-          <div></div>
         </div>
       </div>
     </div>
     {% endif %}
-  {% endblock %}
+{% endblock %}
+
