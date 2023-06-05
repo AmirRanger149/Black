@@ -1,4 +1,4 @@
-from .models import InventoryItem, ProductBrand, ProductVisit, CartItem
+from .models import InventoryItem, ProductBrand, ProductVisit, CartItem, Discount
 from index.extensions.group_list_convertor import group_list
 from django.contrib.auth.decorators import login_required
 from index.extensions.http_service import get_client_ip
@@ -7,13 +7,15 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
 from django.db.models import Count
+from .forms import DiscountForm
 from carton.cart import Cart
 
 
 @login_required
 def cart_view(request):
     cart = Cart(request.session)
-    return render(request, 'products/cart/cart.html', {'cart': cart})
+    discount = DiscountForm()
+    return render(request, 'products/cart/cart.html', {'cart': cart, 'discount': discount})
 
 
 @login_required
@@ -54,6 +56,71 @@ def remove_from_cart(request):
         response_data = {'success': False, 'message': message}
     
     return JsonResponse(response_data)
+
+
+def apply_discount(request):
+    if request.method == 'POST':
+        form = DiscountForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            cart = request.session.get('cart', {})
+            # Update cart prices with discounts
+            for item_id, quantity in cart.items():
+                try:
+                    item = InventoryItem.objects.get(pk=item_id)
+                    discounted_price = item.apply_discount(discount_code=code)
+                    cart[item_id]['price'] = discounted_price
+                except InventoryItem.DoesNotExist:
+                    pass
+
+            # Save updated cart in session
+            request.session['cart'] = cart
+
+            # Prepare cart data as JSON response
+            cart_data = {
+                'success': True,
+                'message': 'کد تخفیف با موفقیت اعمال شد.',
+                'cart': cart,
+            }
+
+            return JsonResponse(cart_data)
+        else:
+            # Prepare error response
+            error_data = {
+                'success': False,
+                'message': 'کد تخفیف نامعتبر است.',
+            }
+
+            return JsonResponse(error_data)
+
+
+def CheckoutView(request):
+    pass
+    
+
+def update_cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity'))
+
+        try:
+            product = InventoryItem.objects.get(pk=product_id)
+            if quantity > 0:
+                cart = Cart(request.session)
+                cart.update_quantity(product, quantity)
+                message = f"تعداد محصول {product.product_title} با موفقیت به‌روزرسانی شد."
+                response_data = {'success': True, 'message': message}
+            else:
+                message = "تعداد محصول باید بیشتر از صفر باشد."
+                response_data = {'success': False, 'message': message}
+        except InventoryItem.DoesNotExist:
+            message = "محصول مورد نظر پیدا نشد."
+            response_data = {'success': False, 'message': message}
+        
+        return JsonResponse(response_data)
+
+
+
 
 
 '''

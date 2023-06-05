@@ -5,7 +5,7 @@ developer : #ABS
 """
 
 # Import all requirements
-from product.views import cart_view, add_to_cart, remove_from_cart
+from product.views import cart_view, add_to_cart, remove_from_cart, update_cart, apply_discount, CheckoutView
 from .local_settings import DEVELOPERS_PANEL, ADMINS_PANEL
 from wagtail.documents import urls as wagtaildocs_urls
 from django.conf.urls import handler404, handler500
@@ -22,10 +22,12 @@ import os.path
 
 # NOTE : PLEASE KEEP THIS FILE SAFE !
 urlpatterns = [
+    path('cart/apply_discount/', apply_discount, name='apply_discount'),
     path('cart/remove/', remove_from_cart, name='remove_from_cart'),
-    #path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('cart/update/', update_cart, name='update_cart'),
     path('cart/add/', add_to_cart, name='add_to_cart'),
     path('api-auth/', include('rest_framework.urls')),
+    path('checkout/', CheckoutView, name='checkout'),
     path('accounts/', include('user_accounts.urls')),
     path('UsersAccounts/', include('allauth.urls')),
     path(ADMINS_PANEL, include(wagtailadmin_urls)),

@@ -105,10 +105,15 @@ class ProductIndex(RoutablePageMixin, Page):
 
 
 @register_snippet
-class Offer(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    discount = models.DecimalField(max_digits=5, decimal_places=2)  # For percentage discount, use max_digits=5, decimal_places=2
+class Discount(models.Model):
+    title = models.CharField(max_length=50, unique=True)
+    DISCOUNT_TYPES = (
+        ('percentage', 'درصدی'),
+        ('fixed', 'ثابت'),
+    )
+    code = models.CharField(max_length=50, unique=True)
+    dis_type = models.CharField(max_length=20, choices=DISCOUNT_TYPES)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
     collection = models.ForeignKey(
@@ -119,10 +124,14 @@ class Offer(models.Model):
         help_text='مجموعه برای تخفیف انتخاب کنید',
     )
 
-    products = models.ManyToManyField('InventoryItem', related_name='offers')
+    def check_dis(self,code):
+        if code == self.code :
+            return True
+        else:
+            return False
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class InventoryItem(RoutablePageMixin, Page):
@@ -146,10 +155,10 @@ class InventoryItem(RoutablePageMixin, Page):
         verbose_name='تصویر / تصاویر محصول',
         help_text='تصویر/تصاویر محصول را اضافه کنید',
     )
-    quantity = models.PositiveIntegerField(verbose_name='تعداد محصول', null=False)
+    quantity = models.PositiveIntegerField(verbose_name='تعداد محصول', null=True)
     date = models.DateTimeField("Post date", default=timezone.now)
     brand = models.OneToOneField(ProductBrand, on_delete=models.PROTECT, verbose_name='برند', null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='قیمت', blank=False, null=False)
+    price = models.PositiveIntegerField(verbose_name='قیمت', blank=False, null=False)
     short_description = models.CharField(max_length=360, db_index=True, null=True, blank=True, verbose_name='توضیحات کوتاه')
     description = models.TextField(verbose_name='توضیحات اصلی', db_index=True, null=True, blank=True)
     colors = models.OneToOneField(ProductColor, null=True, blank=True, verbose_name='رنگ بندی محصول:', on_delete=models.PROTECT)
@@ -181,6 +190,29 @@ class InventoryItem(RoutablePageMixin, Page):
         return Product.objects.annotate(total_sales=models.Sum('sales__quantity')).order_by('-total_sales')[:limit]
 
     top_sales_products.short_description = 'پر فروش ترین محصولات'
+
+    def apply_discount(self, discount_code):
+        try:
+            discount = Discount.objects.get(code=discount_code)
+            if discount.start_date <= timezone.now().date() <= discount.end_date:
+                if discount.check_dis(discount_code):
+                    if discount.dis_type == 'percentage':
+                        # تخفیف بر اساس درصد
+                        discount_amount = self.price * Decimal(discount.value) / 100
+                    elif discount.dis_type == 'fixed':
+                        # تخفیف به صورت مقدار ثابت
+                        discount_amount = Decimal(discount.value)
+                    else:
+                        # نوع تخفیف نامعتبر
+                        discount_amount = Decimal(0)
+
+                    final_price = self.price - discount_amount
+                    return final_price
+
+        except Discount.DoesNotExist:
+            pass
+
+        return self.price
 
     def __str__(self):
         return f"{self.product_title} - {self.quantity} in stock"

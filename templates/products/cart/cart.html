@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block TITLE %}سبد خرید{% endblock %}
+
+{% block CONTENT %}
+<header class="headerblog">
+  <div class="h1divhead">
+    <h1 class="blogh1 white-color">سبد خرید</h1>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-12">
+      <table class="cardtable">
+        <tr>
+          <th>محصول</th>
+          <th>قیمت (تومان)</th>
+          <th>تعداد</th>
+          <th>جمع جزء</th>
+          <th>عملیات</th>
+        </tr>
+        {% for product in cart.products %}
+        <tr>
+          <td>
+            {% if product.image %}
+            <img src="{{ product.image.url }}" width="80px" alt="{{ product.product_title }}">
+            {% else %}
+            <span>{{ product.product_title }}</span>
+            {% endif %}
+          </td>
+          <td>{{ product.price }}</td>
+          <td>
+            <form method="POST" action="{% url 'update_cart' %}">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ product.id }}">
+              <input type="number" name="quantity" value="{{ product.quantity }}" min="1">
+              <button type="submit">به‌روزرسانی</button>
+            </form>
+          </td>
+          <td>{{ product|calculate_subtotal }}</td>
+          <td>
+            <form method="POST" action="{% url 'remove_from_cart' %}">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ product.id }}">
+              <button type="submit" class="btn btn-outline-danger">حذف</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">سبد خرید شما خالی است.</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12">
+      <table class="cardtableaside">
+        <tr>
+          <td class="h4">جمع کل سبد خرید (تومان)</td>
+        </tr>
+        <tr>
+          <td>جمع جزء</td>
+          <td>{{ cart.products|calculate_total_price }}</td>
+        </tr>
+        <tr>
+          <td>تخفیف</td>
+          <td>
+            <form method="POST">
+              {% csrf_token %}
+              {{ discount }}
+              <button type="submit" class="btn btn-outline-danger">اعمال تخفیف</button>
+            </form>
+            <td>
+              <form method="POST" action="{% url 'checkout' %}">
+                <button type="submit" class="btn btn-outline-danger">ثبت سفارش و پرداخت</button>
+              </form>
+            </td>
+          </td>
+        </tr>
+        <tr>
+          <td>جمع کل</td>
+          <td>{{ cart.products|calculate_total_price }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -19,10 +19,10 @@ LOCAL_ACCOUNT_USERNAME_BLACKLIST = ["admin", 'security', 'secure', 'protection',
            'virus', 'vulnerabilityassessment', 'zeroday', "god"]
 
 # CSRF LOCAL TRUSTED ORIGINS :
-CSRF_LOCAL_TRUSTED_ORIGINS = ['https://8000-amirranger149-black-8s1l4s7ygj8.ws-eu98.gitpod.io']
+CSRF_LOCAL_TRUSTED_ORIGINS = ['https://8000-amirranger149-black-yv8ql3vssgv.ws-eu98.gitpod.io']
 
 # ALLOWED LOCAL HOSTS :
-ALLOWED_LOCAL_HOSTS = ['8000-amirranger149-black-8s1l4s7ygj8.ws-eu98.gitpod.io', '127.0.0.1', 'localhost']
+ALLOWED_LOCAL_HOSTS = ['8000-amirranger149-black-yv8ql3vssgv.ws-eu98.gitpod.io', '127.0.0.1', 'localhost']
 
 # SECRET KEY
 SEC_KEY = 'django-insecure-38n_&5$5ga9)#!-r$&jcyk3^v^673x0u3%f8)*4ekxrd$)=ujs'
@@ -46,7 +46,7 @@ ADMINS_PANEL = 'UNIQUEADMINISTRATOR174/'
 DEVELOPERS_PANEL = 'UNIQUEDEVELOPER174/'
 
 # BASE_SITE
-BASE_ACTIVE_SITE = '8000-amirranger149-black-8s1l4s7ygj8.ws-eu98.gitpod.io'
+BASE_ACTIVE_SITE = '8000-amirranger149-black-yv8ql3vssgv.ws-eu98.gitpod.io'
 
 # SITE DEBUG
 SITE_DEBIG = True

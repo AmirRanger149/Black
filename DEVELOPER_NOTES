@@ -24,23 +24,3 @@ fetch('آدرس_API', {
     console.error('خطا:', error);
   });
 ------------------------------------
- '''   def apply_discount(self):
-        current_date = timezone.now().date()
-        offers = self.offers.filter(start_date__lte=current_date, end_date__gte=current_date)
-
-        if offers.exists():
-            # Assuming a product can have multiple offers, choose the highest discount
-            max_discount = max(offers.values_list('discount', flat=True))
-            if max_discount > 0:
-                if max_discount <= 1:
-                    # Percentage discount
-                    discount_amount = self.price * Decimal(max_discount)
-                else:
-                    # Fixed amount discount
-                    discount_amount = Decimal(max_discount)
-
-                final_price = self.price - discount_amount
-                return final_price
-
-            return self.price
-    '''
