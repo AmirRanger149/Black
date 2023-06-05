@@ -1,210 +1,128 @@
-<!DOCTYPE html>
-<html lang="fa">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.rtl.min.css"
-      integrity="sha384-T5m5WERuXcjgzF8DAb7tRkByEZQGcpraRTinjpywg37AO96WoYN9+hrhDVoM6CaT"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
-    <title>آرشیو مقالات</title>
-  </head>
-  <body>
+{% extends "base.html" %}
+{% load static %}
+{% load wagtailcore_tags %}
+{% load custom_filters %}
+{% block TITLE %}{{ page.title }}{% endblock %}
+{% block CSS %}
+<link rel="stylesheet" href="{% static 'css/blog.css' %}" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css">
+{% endblock %}
+{% block HEADJS %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+{% endblock %}
+{% block CONTENT %}
     <header class="headerblog">
       <div class="h1divhead">
-        <h1 class="blogh1 white-color">آرشیو مقالات</h1>
+        <h1 class="blogh1 white-color">{{ page.title }}</h1>
       </div>
     </header>
     <section class="container-fluid">
         <div class="row">
           <section
-            class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12"
-          >
-            <div class="row">
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
+            class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            <div class="row" id="blog-posts">
+              {% for post in posts %}
+                <div class="card" style="width: 18rem">
+                  {% if post.image %}
+                    <img
+                      src="{{ post.image.url }}"
+                      class="card-img-top"
+                      alt="{{ post.title }}"
+                    />
+                  {% else %}
+                    <span>{{ post.title }}</span>
+                  {% endif %}
+                  <div class="card-body">
+                    <h3 class="card-title h3">{{ post.title }}</h3>
+                    <span class="bi bi-person">{{ post.owner }}</span><br>
+                    {% with categories=post.collection %}
+                      {% if categories %}
+                        {% for category in categories.all %}
+                          <span class="bi bi-folder2-open">{{ category.name }}</span><br>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                    <span class="card-text">{{ post.intro|richtext }}</span><br>
+                    <span class="bi bi-calendar3">{{ post.date|jpub }}</span></p>
+                    <a href="{% pageurl post %}">مشاهده بیشتر</a>
+                  </div>
                 </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
-              <div class="card" style="width: 18rem">
-                <img
-                  src="/img/تریکینگ ایران اسلاید سه.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h3 class="card-title h3">مقاله شماره یک</h3>
-
-                  <span class="bi bi-person">مهیار بخششی</span>
-                  <span class="bi bi-folder2-open">دسته بندی</span>
-                  <span class="bi bi-calendar3">1402/03/01</span>
-
-                  <p class="card-text">
-                    توضیحات کوتاه درباره محتوای مقاله برای انتخاب بهتر کاربران و
-                    بهبود عملکرد سئو سایت
-                  </p>
-                  <a href="#">مشاهده بیشتر</a>
-                </div>
-              </div>
+              {% endfor %}
             </div>
           </section>
         </div>
       <div class="plusbutton">
-        <button type="button" class="btn btn-outline-danger">
+        <button type="button" class="btn btn-outline-danger" id="load-more">
           بارگیری بیشتر مقالات
         </button>
       </div>
     </section>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
-      integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
-      integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
-      crossorigin="anonymous"
-    ></script>
-    <script src="/js/main.js"></script>
-  </body>
-</html>
+{% block JS %}
+<script>
+  $(document).ready(function() {
+    var page = 1;
+    var perPage = 9;
+
+    function loadPosts() {
+      $.getJSON('/blog/json/', { page: page, per_page: perPage }, function(data) {
+        var posts = data.posts;
+        if (posts.length > 0) {
+          for (var i = 0; i < posts.length; i++) {
+            var post = posts[i];
+            var postHtml = `
+            <div class="card" style="width: 18rem">
+              {% if post.image %}
+                <img
+                  src="${post.image}"
+                  class="card-img-top"
+                  alt="${post.title}"
+                />
+              {% else %}
+                <span>${post.title}</span>
+              {% endif %}
+              <div class="card-body">
+                <h3 class="card-title h3">${post.title}</h3>
+                <span class="bi bi-person">${post.owner}</span><br>
+                {% with categories=post.collection %}
+                  {% if categories %}
+                    {% for category in categories.all %}
+                      <span class="bi bi-folder2-open">${category.name}</span><br>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <span class="card-text">${post.intro|richtext}</span><br>
+                <span class="bi bi-calendar3">${post.date|jpub}</span></p>
+                <a href="{% pageurl post %}">مشاهده بیشتر</a>
+              </div>
+            </div>
+            `;
+            $('#blog-posts').append(postHtml);
+          }
+          page++;
+        } else {
+          Swal.fire({
+            icon: 'info',
+            title: 'پستی برای لود کردن وجود ندارد',
+            text: 'دیگر پستی برای نمایش وجود ندارد.',
+            confirmButtonText: 'باشه',
+          });
+        }
+      });
+    }
+
+    $('#load-more').click(function() {
+      loadPosts();
+    });
+
+    loadPosts();
+  });
+</script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+  integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+  crossorigin="anonymous"
+></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
+{% endblock %}
