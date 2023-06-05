@@ -14,6 +14,7 @@ from django.views.generic.base import RedirectView
 from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from wagtail import urls as wagtail_urls
+from blog.views import BlogPageAPIView
 from django.contrib import admin
 from django.conf import settings
 from .api import api_router
@@ -24,6 +25,7 @@ import os.path
 urlpatterns = [
     path('cart/apply_discount/', apply_discount, name='apply_discount'),
     path('cart/remove/', remove_from_cart, name='remove_from_cart'),
+    url(r'^api/blog/$', BlogPageAPIView.as_view(), name='blog_api'),
     path('cart/update/', update_cart, name='update_cart'),
     path('cart/add/', add_to_cart, name='add_to_cart'),
     path('api-auth/', include('rest_framework.urls')),

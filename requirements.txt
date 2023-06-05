@@ -30,6 +30,7 @@ pandas==2.0.1
 passlib==1.7.4
 Pillow==9.5.0
 pycparser==2.21
+Pygments==2.15.1
 PyJWT==2.7.0
 python3-openid==3.2.0
 pytz==2023.3

@@ -65,7 +65,7 @@
     var perPage = 9;
 
     function loadPosts() {
-      $.getJSON('/blog/json/', { page: page, per_page: perPage }, function(data) {
+      $.getJSON('/api/blog/', { page: page, per_page: perPage }, function(data) {
         var posts = data.posts;
         if (posts.length > 0) {
           for (var i = 0; i < posts.length; i++) {
@@ -93,7 +93,7 @@
                 {% endwith %}
                 <span class="card-text">${post.intro|richtext}</span><br>
                 <span class="bi bi-calendar3">${post.date|jpub}</span></p>
-                <a href="{% pageurl post %}">مشاهده بیشتر</a>
+                <a href="${post.url}">مشاهده بیشتر</a>
               </div>
             </div>
             `;

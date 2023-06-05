@@ -9,15 +9,20 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from user_accounts.models import user_accounts as User
+from django.views.decorators.csrf import csrf_exempt
 from wagtail.snippets.models import register_snippet
 from django.http import HttpRequest, JsonResponse
+from rest_framework.renderers import JSONRenderer
 from wagtail.api.v2.views import PagesAPIViewSet
 from django.shortcuts import render, redirect
 from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
+from .serializers import BlogPageSerializer
 from taggit.models import TaggedItemBase
 from wagtail.fields import RichTextField
+from .views import BlogPageAPIView
 from django.utils import timezone
+from index.models import Comments
 from wagtail.search import index
 from django.db import models
 
@@ -51,11 +56,6 @@ class BlogIndex(Page, RoutablePageMixin):
     def get_template(self, request, *args, **kwargs):
 
         return 'blog/blogarchive/blogarchive.html'
-
-    def serve(self, request, *args, **kwargs):
-        # serve data and send http Response
-        self.get_template(request, *args, **kwargs),
-        return render(request, template, context)
 
     class Meta:
         verbose_name = 'صفحه اصلی وبلاگ'
@@ -102,28 +102,22 @@ class BlogPage(Page, RoutablePageMixin):
     ]
 
     def to_json(self):
-        return {
-            'title': self.title,
-            'owner': self.owner.username if self.owner else '',
-            'comments': self.comments.count(),
-            'image': self.image.url if self.image else '',
-            'collection': self.collection.title if self.collection else '',
-            'intro': self.intro,
-            'date': self.date.strftime('%Y-%m-%d'),
-            'body': self.body,
-            'description': self.description,
-        }
+        serializer = BlogPageSerializer(self)
+        return JSONRenderer().render(serializer.data)
 
     def get_template(self, request, *args, **kwargs):
         return 'blog/blogsingle/blogsingle.html'
 
     @route(r'^json/$', name='blog_page_json')
-    def serve(self, request, *args, **kwargs):
-        # serve data and send http Response and json Response
-        if request.GET.get('json', False):
-            json_data = {'posts': self.to_json()}
-            return JsonResponse(json_data)
-        return super().serve(request, *args, **kwargs)
+    @csrf_exempt
+    def json_view(self, request, *args, **kwargs):
+        if 'application/json' in request.headers.get('Accept', ''):
+            if request.method == 'GET':
+                return JsonResponse(self.to_json(), safe=False)
+            else:
+                return JsonResponse({'خطا': 'درخواست نامعتبر'}, status=405)
+        else:
+            return super().serve(request, *args, **kwargs)
 
     class Meta:
         verbose_name = 'پست وبلاگ'
