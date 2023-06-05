@@ -20,12 +20,12 @@ def login_signup(request):
         if login_form.is_valid():
             user = login_form.get_user()
             login(request, user)
-            return redirect('home')
+            return redirect('/')
         
         if signup_form.is_valid():
             user = signup_form.save()
             login(request, user)
-            return redirect('home') 
+            return redirect('/') 
         
     else:
         login_form = LoginForm()
