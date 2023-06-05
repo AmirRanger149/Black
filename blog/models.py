@@ -17,10 +17,8 @@ from wagtail.api.v2.views import PagesAPIViewSet
 from django.shortcuts import render, redirect
 from wagtail.models import Page, PageManager
 from wagtail.admin.panels import FieldPanel
-from .serializers import BlogPageSerializer
 from taggit.models import TaggedItemBase
 from wagtail.fields import RichTextField
-from .views import BlogPageAPIView
 from django.utils import timezone
 from index.models import Comments
 from wagtail.search import index
@@ -101,9 +99,6 @@ class BlogPage(Page, RoutablePageMixin):
         FieldPanel('collection'),
     ]
 
-    def to_json(self):
-        serializer = BlogPageSerializer(self)
-        return JSONRenderer().render(serializer.data)
 
     def get_template(self, request, *args, **kwargs):
         return 'blog/blogsingle/blogsingle.html'

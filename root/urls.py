@@ -5,7 +5,6 @@ developer : #ABS
 """
 
 # Import all requirements
-from product.views import cart_view, add_to_cart, remove_from_cart, update_cart, apply_discount, CheckoutView
 from .local_settings import DEVELOPERS_PANEL, ADMINS_PANEL
 from wagtail.documents import urls as wagtaildocs_urls
 from django.conf.urls import handler404, handler500
@@ -14,7 +13,6 @@ from django.views.generic.base import RedirectView
 from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from wagtail import urls as wagtail_urls
-from blog.views import BlogPageAPIView
 from django.contrib import admin
 from django.conf import settings
 from .api import api_router
@@ -23,19 +21,14 @@ import os.path
 
 # NOTE : PLEASE KEEP THIS FILE SAFE !
 urlpatterns = [
-    path('cart/apply_discount/', apply_discount, name='apply_discount'),
-    path('cart/remove/', remove_from_cart, name='remove_from_cart'),
-    url(r'^api/blog/$', BlogPageAPIView.as_view(), name='blog_api'),
-    path('cart/update/', update_cart, name='update_cart'),
-    path('cart/add/', add_to_cart, name='add_to_cart'),
     path('api-auth/', include('rest_framework.urls')),
-    path('checkout/', CheckoutView, name='checkout'),
     path('accounts/', include('user_accounts.urls')),
     path('UsersAccounts/', include('allauth.urls')),
     path(ADMINS_PANEL, include(wagtailadmin_urls)),
     path('UNIQUEDOC/', include(wagtaildocs_urls)),
     path(DEVELOPERS_PANEL, admin.site.urls),
-    path('cart/', cart_view, name='cart'),
+    path('SiteAPI/', include('index.urls')),
+    path('cart/', include('product.urls')),
     path('api/', api_router.urls),
 
     re_path(r'', include(wagtail_urls)),

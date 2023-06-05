@@ -1,11 +1,16 @@
-from .serializers import BlogPageSerializer
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, JsonResponse
+from blog.serializers import BlogPageSerializer
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from .models import BlogPage
 
 
-class BlogPageAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        posts = BlogPage.objects.all()
-        serializer = BlogPageSerializer(posts, many=True)
-        return Response(serializer.data)
+def blog_post_list(request):
+    
+    if request.method == 'GET':
+        blog_page = BlogPage.objects.all()
+        serializer = BlogPageSerializer(blog_page, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return Response(status=404)

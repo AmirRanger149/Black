@@ -58,6 +58,7 @@ def remove_from_cart(request):
     return JsonResponse(response_data)
 
 
+@login_required
 def apply_discount(request):
     if request.method == 'POST':
         form = DiscountForm(request.POST)
@@ -94,10 +95,12 @@ def apply_discount(request):
             return JsonResponse(error_data)
 
 
+@login_required
 def CheckoutView(request):
     pass
     
 
+@login_required
 def update_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')

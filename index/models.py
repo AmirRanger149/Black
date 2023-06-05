@@ -16,7 +16,6 @@ from rest_framework.fields import Field
 from taggit.forms import TagField
 from wagtail.api import APIField
 from wagtail.search import index
-from blog.models import BlogPage
 from django.db import models
 
 # INDEX PAGE MANAGER
@@ -25,20 +24,6 @@ class IndexPageManager(PageManager):
     DEVELOPMENT : #ABS
      '''
     pass
-
-
-# Index Child Page Serializer
-class IndexChildPageSerializer(Field):
-    ''' Serialize model => API | JSON '''
-    def to_representation(self, value):
-        return [
-            {
-                'id' : child.id,
-                'slug' : child.slug,
-                'seo_title' : child.seo_title,
-                'title' : child.title,
-            }for child in value
-        ]
 
 
 # Index class
@@ -52,14 +37,6 @@ class Index(Page):
     content_panels = Page.content_panels + [
         FieldPanel('body'),
     ]
-
-    api_fields = [
-        APIField("get_child_pages", serializer=IndexChildPageSerializer()),
-    ]
-    
-    @property
-    def get_child_pages(self):
-        return self.get_children().public().live()
 
     def get_template(self, request, *args, **kwargs):
 
