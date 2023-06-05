@@ -1,5 +1,6 @@
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail_color_panel.edit_handlers import NativeColorPanel
+from wagtail.images.api.fields import ImageRenditionField
 from user_accounts.models import user_accounts as User
 from wagtail.snippets.models import register_snippet
 from wagtail_color_panel.fields import ColorField
@@ -44,6 +45,7 @@ class ProductChildPageSerializer(Field):
                 'is_active' : child.is_active,
                 'is_available' : child.is_available,
                 'total_visits' : child.total_visits,
+                'collection' : child.collection,
 
             }for child in value
         ]
@@ -118,6 +120,14 @@ class ProductIndex(RoutablePageMixin, Page):
     content_panels = Page.content_panels + [
         FieldPanel('intro')
     ]
+
+    api_fields = [
+        APIField("get_child_pages", serializer=ProductChildPageSerializer()),
+    ]
+
+    @property
+    def get_child_pages(self):
+        return self.get_children().public().live()
 
     def get_template(self, request, *args, **kwargs):
 
@@ -220,7 +230,22 @@ class InventoryItem(RoutablePageMixin, Page):
     ]
 
     api_fields = [
-        APIField("get_child_pages", serializer=ProductChildPageSerializer()),
+        APIField('product_title'),
+        APIField('comments'),
+        APIField('collection'),
+        APIField('author'),
+        APIField('image'),
+        APIField('quantity'),
+        APIField('date'),
+        APIField('brand'),
+        APIField('price'),
+        APIField('short_description'),
+        APIField('description'),
+        APIField('colors'),
+        APIField('is_active'),
+        APIField('is_available'),
+        APIField('total_visits'),
+        APIField('image', serializer=ImageRenditionField('fill-250x250')),
     ]
 
     @property

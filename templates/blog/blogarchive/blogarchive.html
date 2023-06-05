@@ -64,7 +64,7 @@
     var perPage = 9;
 
     function loadPosts() {
-      $.getJSON('/UNIQUEAPI174/pages/?child_of=4', { offset: page, limit: perPage }, function(data) {
+      $.getJSON('/UNIQUEAPI174/pages/?type=blog.BlogPage', { offset: page, limit: perPage }, function(data) {
         var posts = data.posts;
         if (posts.length > 0) {
           for (var i = 0; i < posts.length; i++) {

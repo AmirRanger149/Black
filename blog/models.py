@@ -73,6 +73,14 @@ class BlogIndex(Page, RoutablePageMixin):
 
     parent_page_types = ['index.Index']
 
+    api_fields = [
+        APIField("get_child_pages", serializer=BlogPageChildSerializer()),
+    ]
+
+    @property
+    def get_child_pages(self):
+        return self.get_children().public().live()
+
     def get_template(self, request, *args, **kwargs):
 
         return 'blog/blogarchive/blogarchive.html'
@@ -130,23 +138,27 @@ class BlogPage(Page, RoutablePageMixin):
         FieldPanel('collection'),
     ]
 
+    api_fields = [
+        APIField('comments'),
+        APIField('title'),
+        APIField('intro'),
+        APIField('image'),
+        APIField('author'),
+        APIField('date'),
+        APIField('description'),
+        APIField('collection'),
+        APIField('image', serializer=ImageRenditionField('fill-250x250')),
+    ]
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    ]
-
-    api_fields = [
-        APIField("get_child_pages", serializer=BlogPageChildSerializer()),
     ]
 
     def jpub(self):
         return jConvert(self.date)
     
     jpub.short_description = 'زمان انتشار'
-
-    @property
-    def get_child_pages(self):
-        return self.get_children().public().live()
 
     def get_template(self, request, *args, **kwargs):
         return 'blog/blogsingle/blogsingle.html'
