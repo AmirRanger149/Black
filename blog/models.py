@@ -73,11 +73,6 @@ class BlogIndex(Page, RoutablePageMixin):
 
     parent_page_types = ['index.Index']
 
-    def jpub(self):
-        return jConvert(self.date)
-    
-    jpub.short_description = 'زمان انتشار'
-
     def get_template(self, request, *args, **kwargs):
 
         return 'blog/blogarchive/blogarchive.html'
@@ -143,6 +138,11 @@ class BlogPage(Page, RoutablePageMixin):
     api_fields = [
         APIField("get_child_pages", serializer=BlogPageChildSerializer()),
     ]
+
+    def jpub(self):
+        return jConvert(self.date)
+    
+    jpub.short_description = 'زمان انتشار'
 
     @property
     def get_child_pages(self):
