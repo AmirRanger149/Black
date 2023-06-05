@@ -8,4 +8,4 @@ class BlogPageSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = BlogPage
-        fields = ['__all__']
+        fields = ['id', 'comments', 'owner', 'image', 'collection', 'intro', 'date', 'body', 'description']
